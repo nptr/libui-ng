@@ -3992,6 +3992,26 @@ _UI_EXTERN void uiTableSetSelection(uiTable *t, uiTableSelection *sel);
  */
 _UI_EXTERN void uiFreeTableSelection(uiTableSelection* s);
 
+
+/**
+ * A tree control
+ *
+ * @struct uiTreeView
+ * @extends uiControl
+ * @ingroup dataview
+ */
+typedef struct uiTreeView uiTreeView;
+#define uiTreeView(this) ((uiTreeView *) (this))
+
+
+/**
+ * Creates a new tree control.
+ *
+ * @returns A new uiTreeView instance.
+ * @memberof uiTreeView @dataview
+ */
+_UI_EXTERN uiTreeView *uiNewTreeView(void);
+
 #ifdef __cplusplus
 }
 #endif

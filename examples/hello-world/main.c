@@ -12,7 +12,7 @@ int main(void)
 	uiInitOptions o = {0};
 	const char *err;
 	uiWindow *w;
-	uiLabel *l;
+	uiTreeView *l;
 
 	err = uiInit(&o);
 	if (err != NULL) {
@@ -25,7 +25,7 @@ int main(void)
 	w = uiNewWindow("Hello World!", 300, 30, 0);
 	uiWindowOnClosing(w, onClosing, NULL);
 
-	l = uiNewLabel("Hello, World!");
+	l = uiNewTreeView();
 	uiWindowSetChild(w, uiControl(l));
 
 	uiControlShow(uiControl(w));

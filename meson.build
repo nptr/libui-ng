@@ -4,7 +4,7 @@
 
 # TODO remove cpp from this list once https://github.com/mesonbuild/meson/issues/5181 is settled; move it to the OS checks and under cpp-multithread
 project('libui', ['c', 'cpp'],
-	meson_version: '>=0.58.0',
+	meson_version: '>=0.55.0',
 	default_options: [
 		'buildtype=debug',				# build debug by default
 		'default_library=shared',			# build shared libraries by default

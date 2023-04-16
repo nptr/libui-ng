@@ -30,15 +30,6 @@ libui_examples = {
 	'histogram': {
 		'sources':		['histogram/main.c'],
 	},
-	'cpp-multithread': {
-		'sources':		['cpp-multithread/main.cpp'],
-		'deps':		[
-			dependency('threads',
-				required: true),
-		],
-		'cpp_args':	libui_example_cpp_extra_args,
-		'link_args':	libui_example_cpp_extra_args,
-	},
 	'drawtext': {
 		'sources':		['drawtext/main.c'],
 	},
