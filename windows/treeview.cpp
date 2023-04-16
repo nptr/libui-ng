@@ -1,8 +1,29 @@
 #include "uipriv_windows.hpp"
 
+struct uiTreeViewModel {
+	uiTreeViewDataSource *data;
+	uiTreeView* tree;
+};
+
+uiTreeViewModel *uiNewTreeViewModel(uiTreeViewDataSource *data)
+{
+	uiTreeViewModel *m;
+
+	m = uiprivNew(uiTreeViewModel);
+	m->data = data;
+	m->tree = nullptr;
+	return m;
+}
+
+void uiFreeTreeViewModel(uiTreeViewModel *m)
+{
+	uiprivFree(m);
+}
+
 struct uiTreeView {
 	uiWindowsControl c;
 	HWND hwnd;
+	uiTreeViewModel* model;
 };
 
 static BOOL onWM_COMMAND(uiControl *c, HWND hwnd, WORD code, LRESULT *lResult)
@@ -39,12 +60,13 @@ static void uiTreeViewMinimumSize(uiWindowsControl *c, int *width, int *height)
 	*height = y;
 }
 
-uiTreeView *uiNewTreeView()
+uiTreeView *uiNewTreeView(uiTreeViewModel* m)
 {
 	uiTreeView *t;
 
 	uiWindowsNewControl(uiTreeView, t);
 
+	t->model = m;
 	t->hwnd = uiWindowsEnsureCreateControlHWND(0,
 		WC_TREEVIEW, L"",
 		TVS_HASLINES,
@@ -56,8 +78,3 @@ uiTreeView *uiNewTreeView()
 
 	return t;
 }
-
-
-// TODO:
-// uiTreeDataSource - pure data setter and getter supplied by user
-// uiTreeDataModel - pure notification interface for the attached control?

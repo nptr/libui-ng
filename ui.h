@@ -3998,11 +3998,70 @@ _UI_EXTERN void uiFreeTableSelection(uiTableSelection* s);
  *
  * @struct uiTreeView
  * @extends uiControl
- * @ingroup dataview
+ * @ingroup treeview
  */
 typedef struct uiTreeView uiTreeView;
 #define uiTreeView(this) ((uiTreeView *) (this))
 
+/**
+ * Represents a tree view item
+ */
+typedef struct uiTreeViewItem {
+	const char* text;		//!< The items text.
+	const void* userData;	//!< User data field for the data source to identify the underlying item.
+} uiTreeViewItem;
+
+/**
+ * TreeView model delegate to retrieve data and inform about model changes.
+ *
+ * This is a wrapper around uiTreeViewDataSource where the actual data is
+ * held.
+ *
+ * The main purpose it to provide methods to the developer to signal that
+ * underlying data has changed.
+ *
+ * @warning Not informing the uiTreeView about out-of-band data changes is
+ *          an error. User edits via uiTreeView do *not* fall in this category.
+ * @struct uiTreeView
+ * @ingroup treeview
+ */
+typedef struct uiTreeViewModel uiTreeViewModel;
+
+/**
+ * Developer defined methods for data retrieval and setting.
+ *
+ * These methods get called whenever the associated uiTreeViewModel needs to
+ * retrieve data or a uiTreeView wants to set data.
+ *
+ * @struct uiTreeViewDataSource
+ * @ingroup treeview
+ */
+typedef struct uiTreeViewDataSource uiTreeViewDataSource;
+struct uiTreeViewDataSource {
+
+	/**
+	 * Returns the number of children the specified item has.
+	 * 
+	 * For the root node, `item` is null.
+	 */
+	int (*NumChildren)(uiTreeViewDataSource *, uiTableModel *, uiTreeViewItem item);
+
+	/**
+	 * Returns the child at the specified index of a tree item.
+	 */
+	uiTreeViewItem (*GetChild)(uiTreeViewDataSource *, uiTableModel *, int index, uiTreeViewItem item);
+
+};
+
+/*
+ *
+ */
+_UI_EXTERN uiTreeViewModel *uiNewTreeViewModel(uiTreeViewDataSource *data);
+
+/*
+ *
+ */
+_UI_EXTERN void uiFreeTreeViewModel(uiTreeViewModel *m);
 
 /**
  * Creates a new tree control.
@@ -4010,7 +4069,7 @@ typedef struct uiTreeView uiTreeView;
  * @returns A new uiTreeView instance.
  * @memberof uiTreeView @dataview
  */
-_UI_EXTERN uiTreeView *uiNewTreeView(void);
+_UI_EXTERN uiTreeView *uiNewTreeView(uiTreeViewModel *);
 
 #ifdef __cplusplus
 }
