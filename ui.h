@@ -4044,12 +4044,12 @@ struct uiTreeViewDataSource {
 	 * 
 	 * For the root node, `item` is null.
 	 */
-	int (*NumChildren)(uiTreeViewDataSource *, uiTableModel *, uiTreeViewItem item);
+	int (*NumChildren)(uiTreeViewDataSource *, uiTreeViewModel *, uiTreeViewItem* parent);
 
 	/**
 	 * Returns the child at the specified index of a tree item.
 	 */
-	uiTreeViewItem (*GetChild)(uiTreeViewDataSource *, uiTableModel *, int index, uiTreeViewItem item);
+	int (*GetChild)(uiTreeViewDataSource *, uiTreeViewModel *, int index, const uiTreeViewItem* parent, uiTreeViewItem* out);
 
 };
 
@@ -4062,6 +4062,11 @@ _UI_EXTERN uiTreeViewModel *uiNewTreeViewModel(uiTreeViewDataSource *data);
  *
  */
 _UI_EXTERN void uiFreeTreeViewModel(uiTreeViewModel *m);
+
+/*
+ * Redraw all because tree item adressing is tedious?
+ */
+_UI_EXTERN void uiTreeViewModelDataChanged(uiTreeViewModel *m);
 
 /**
  * Creates a new tree control.

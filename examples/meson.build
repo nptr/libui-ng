@@ -40,7 +40,7 @@ libui_examples = {
 		'sources':		['datetime/main.c'],
 	},
 	'hello-world': {
-		'sources':		['hello-world/main.c'],
+		'sources':		['hello-world/main.cpp'],
 	},
 	'window': {
 		'sources':		['window/main.c'],
