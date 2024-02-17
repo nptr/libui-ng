@@ -4006,10 +4006,50 @@ typedef struct uiTreeView uiTreeView;
 /**
  * Represents a tree view item
  */
-typedef struct uiTreeViewItem {
-	const char* text;		//!< The items text.
-	const void* userData;	//!< User data field for the data source to identify the underlying item.
-} uiTreeViewItem;
+typedef struct uiTreeViewItem uiTreeViewItem;
+
+/**
+ * 
+ */
+_UI_EXTERN uiTreeViewItem *uiNewTreeViewItem();
+
+/**
+ * 
+ */
+_UI_EXTERN void uiFreeTreeViewItem(uiTreeViewItem *item);
+
+/**
+ * 
+ */
+void uiTreeViewItemSetText(uiTreeViewItem *item, const char* text);
+
+/**
+ * 
+ */
+_UI_EXTERN const char* uiTreeViewItemText(const uiTreeViewItem *item);
+
+/**
+ * 
+ */
+void uiTreeViewItemSetUserData(uiTreeViewItem *item, const void* userdata);
+
+/**
+ * 
+ */
+_UI_EXTERN const void* uiTreeViewItemUserData(const uiTreeViewItem *item);
+
+
+/**
+ * A list of treeview items.
+ *
+ * @struct uiTreeViewItemList
+ * @ingroup treeview
+ */
+typedef struct uiTreeViewItemList
+{
+	int NumItems;			//!< Number of items.
+	uiTreeViewItem *Items;  //!< Array of items.
+} uiTreeViewItemList;
 
 /**
  * TreeView model delegate to retrieve data and inform about model changes.
@@ -4042,31 +4082,42 @@ struct uiTreeViewDataSource {
 	/**
 	 * Returns the number of children the specified item has.
 	 * 
-	 * For the root node, `item` is null.
+	 * For the root node, `parent` is null.
 	 */
-	int (*NumChildren)(uiTreeViewDataSource *, uiTreeViewModel *, uiTreeViewItem* parent);
+	int (*NumChildren)(uiTreeViewDataSource *, uiTreeViewModel *, const uiTreeViewItem* parent);
 
 	/**
 	 * Returns the child at the specified index of a tree item.
+	 * @param index The index of the item to retrieve.
+	 * @param parent The node from where to retrieve the item.
+	 * @param item The retrieved item.
 	 */
-	int (*GetChild)(uiTreeViewDataSource *, uiTreeViewModel *, int index, const uiTreeViewItem* parent, uiTreeViewItem* out);
+	int (*GetChild)(uiTreeViewDataSource *, uiTreeViewModel *, int index, const uiTreeViewItem* parent, uiTreeViewItem* item);
 
 };
 
-/*
- *
+/**
+ * Construct a new treeview model.
+ * 
+ * @memberof uiTableValue @static
  */
 _UI_EXTERN uiTreeViewModel *uiNewTreeViewModel(uiTreeViewDataSource *data);
 
-/*
- *
+/**
+ * Frees the treeview model.
+ * 
+ * The datasource the model was constructed with, will not be deleted.
+ * @memberof uiTreeViewModel
  */
 _UI_EXTERN void uiFreeTreeViewModel(uiTreeViewModel *m);
 
-/*
- * Redraw all because tree item adressing is tedious?
+/**
+ * Repopulates the tree control after data change.
+ * 
+ * @param updateList A list of items to update. Including all children.
+ * Specifying NULL or the root node, will update the whole tree.
  */
-_UI_EXTERN void uiTreeViewModelDataChanged(uiTreeViewModel *m);
+_UI_EXTERN void uiTreeViewModelDataChanged(uiTreeViewModel * m, const uiTreeViewItemList* updateList);
 
 /**
  * Creates a new tree control.
@@ -4075,6 +4126,22 @@ _UI_EXTERN void uiTreeViewModelDataChanged(uiTreeViewModel *m);
  * @memberof uiTreeView @dataview
  */
 _UI_EXTERN uiTreeView *uiNewTreeView(uiTreeViewModel *);
+
+/**
+ * Retrieves the currently selected items.
+ * 
+ * @memberof uiTreeView
+ */
+_UI_EXTERN uiTreeViewItemList uiTreeViewGetSelection(uiTreeView *);
+
+/**
+ * Selects items in the treeview.
+ * 
+ * The `userData` member must match an existing item in the tree.
+ *
+ * @memberof uiTreeView
+ */
+_UI_EXTERN void uiTreeViewSetSelection(uiTreeView *t, const uiTreeViewItemList* sel);
 
 #ifdef __cplusplus
 }

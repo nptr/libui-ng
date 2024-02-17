@@ -60,6 +60,7 @@ libui_sources += [
 	'windows/tabpage.cpp',
 	'windows/text.cpp',
 	'windows/treeview.cpp',
+	'windows/treeviewitem.cpp',
 	'windows/utf16.cpp',
 	'windows/utilwin.cpp',
 	'windows/window.cpp',

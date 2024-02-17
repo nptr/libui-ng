@@ -26,7 +26,7 @@ std::vector<myItemStruct> myTreeData = {
 	} } },
 };
 
-int mySourceNumChildren(uiTreeViewDataSource *, uiTreeViewModel *, uiTreeViewItem* parent)
+int mySourceNumChildren(uiTreeViewDataSource *, uiTreeViewModel *, const uiTreeViewItem* parent)
 {
 	if(parent == NULL)
 	{
@@ -34,7 +34,7 @@ int mySourceNumChildren(uiTreeViewDataSource *, uiTreeViewModel *, uiTreeViewIte
 	}
 	else
 	{
-		myItemStruct* data = (myItemStruct*)parent->userData;
+		myItemStruct* data = (myItemStruct*)uiTreeViewItemUserData(parent);
 		return data->children.size();
 	}
 }
@@ -46,17 +46,17 @@ int mySourceGetChild(uiTreeViewDataSource *, uiTreeViewModel *, int index, const
 		if(index >= myTreeData.size())
 			return 0;
 
-		item->text = myTreeData[index].text;
-		item->userData = (void*)&myTreeData[index];
+		uiTreeViewItemSetText(item, myTreeData[index].text);
+		uiTreeViewItemSetUserData(item, &myTreeData[index]);
 	}
 	else
 	{
-		myItemStruct* data = (myItemStruct*)parent->userData;
+		myItemStruct* data = (myItemStruct*)uiTreeViewItemUserData(parent);
 		if(index >= data->children.size())
 			return 0;
 
-		item->text = data->children[index].text;
-		item->userData = (void*)&(data->children[index]);
+		uiTreeViewItemSetText(item, data->children[index].text);
+		uiTreeViewItemSetUserData(item, (void*)&(data->children[index]));
 	}
 
 	return 1;
@@ -90,6 +90,9 @@ int main(void)
 	uiWindowSetChild(w, uiControl(l));
 
 	uiControlShow(uiControl(w));
+
+	uiTreeViewGetSelection(l);
+
 	uiMain();
 	uiUninit();
 	return 0;
